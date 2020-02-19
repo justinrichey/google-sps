@@ -1,9 +1,50 @@
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 93vw;
+  font-family: 'Poppins', sans-serif;
+  color:white;
 }
 
 #greeting-container {
   margin-top: 20px;
+}
+body {
+    background-color: #222444;
+}
+h1 {
+    text-align: left;
+    font-weight: normal;
+    font-size: 50px;
+    letter-spacing: 8;
+    text-transform: uppercase;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+.menu {
+    margin: 0;
+}
+.menu .menu_selections{
+    list-style: none;
+    text-align: center;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    
+}
+
+.menu .menu_selections .menu_item {
+    display: block;
+    padding: 0.5em;
+    padding-right: 3em;
+    padding-left: 5px;
+    border-top: 2px solid rgba(255, 255, 255, 0.35);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+}
+.menu .menu_selections .menu_item .menu_text {
+    cursor: pointer;
+}
+.menu .menu_selections .menu_item .menu_text:hover {
+    opacity: 0.7;
+    
 }

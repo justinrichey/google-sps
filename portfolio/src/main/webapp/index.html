@@ -2,16 +2,37 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>Justin Richey</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
+  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+  
   <body>
     <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
+      <h1>Justin Richey</h1>
+      <nav class ="menu">
+          <ul class = "menu_selections">
+			<li class = "menu_item">
+				<a class = "menu_text">About Me</a>
+			</li>
+			<li class = "menu_item">
+				<a class = "menu_text">Projects</a>
+			</li>
+            <li class = "menu_item">
+				<a class = "menu_text">Links</a>
+			</li>
+			
+		</ul>
+          </nav>
+
+      <p>Hello! I'm Justin, and I enjoy playing the guitar, 
+          cooking, and learning about other places. I currently attend 
+          UC Berkeley, and I'm looking forward to my time in SPS.
+      </p>
+      <img src="/images/tree.jpg" style="width:577px;height:443px;"/>
+      <p>Click here to get a random Metal Gear quote:</p>
+      <button onclick="addRandomGreeting()">Quote</button>
       <div id="greeting-container"></div>
     </div>
   </body>
