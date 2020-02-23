@@ -14,5 +14,4 @@
 
 function displayText(pageType) {
     window.location = pageType + ".html";
-    
 }
