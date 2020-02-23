@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Justin Richey</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <head>
+        <meta charset="UTF-8">
+        <title>About Me</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
   
-  <body>
+    <body>
     <div id="content">
-      <h1>Justin Richey</h1>
-      <nav class ="menu">
-          <ul class = "menu_selections">
-			<li class = "menu_item">
-				<a class = "menu_text">About Me</a>
-			</li>
-			<li class = "menu_item">
-				<a class = "menu_text">Projects</a>
-			</li>
-            <li class = "menu_item">
-				<a class = "menu_text">Links</a>
-			</li>
-			
-		</ul>
+        <h1 id="menu">Justin Richey</h1>
+        <nav class ="menu">
+            <ul class = "menu_selections">
+                <li class = "menu_item" onclick="displayText('index');">
+                    <span class = "menu_text">About Me</a>
+                </li>
+                <li class = "menu_item" onclick="displayText('projects');">
+                    <span class = "menu_text">Projects</a>
+                </li>
+                <li class = "menu_item" onclick="displayText('links');">
+                    <span class = "menu_text">Links</a>
+                </li>
+		    </ul>
           </nav>
-
-      <p>Hello! I'm Justin, and I enjoy playing the guitar, 
-          cooking, and learning about other places. I currently attend 
-          UC Berkeley, and I'm looking forward to my time in SPS.
-      </p>
-      <img src="/images/tree.jpg" style="width:577px;height:443px;"/>
-      <p>Click here to get a random Metal Gear quote:</p>
-      <button onclick="addRandomGreeting()">Quote</button>
-      <div id="greeting-container"></div>
+        <h2>About Me</h2>
+        <p>Hello! I'm Justin, a second year student at UC Berkeley
+            studying Electrical Engineering and Computer Science.
+            For fun, I enjoy playing the guitar, cooking, and going
+            on hikes. I also love learning about other places and
+            traveling. Most of that learning comes from reading and TV, but
+            if I had the resources, I'd visit as many places
+            as I could. I'm excited for what's to come in SPS!
+        </p>
+        <div style="display: flex; justify-content: center; margin-left: 2.5em; margin-top: 3em">
+        <img src="/images/whiteglobe.png" width=150 height=150 alt="globe">
+        </div>
     </div>
   </body>
 </html>

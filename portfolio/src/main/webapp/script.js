@@ -12,21 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['I’m no hero. Never was, never will be.', 
-      'War has changed.', 
-      'Building the future and keeping the past alive are one and the same thing.', 
-      '!',
-      'Kept you waiting, huh?'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function displayText(pageType) {
+    window.location = pageType + ".html";
+    
 }
