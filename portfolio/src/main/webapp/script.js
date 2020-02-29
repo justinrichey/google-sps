@@ -16,7 +16,8 @@ function displayText(pageType) {
     window.location = pageType + ".html";
 }
 function getMessage() {
-    fetch("/data").then(response => response.text()).then(message => {
+    fetch("/data").then(response => response.json()).then(message => {
+        
         document.getElementById("message-container").innerText = message;
     });
 }
