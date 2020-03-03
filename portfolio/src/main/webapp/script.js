@@ -15,3 +15,18 @@
 function displayText(pageType) {
     window.location = pageType + ".html";
 }
+
+function getMessage() {
+    fetch("/data").then(response => response.json()).then(commentArray => {
+        var commentString = "\n"; //Initializing string containing comments
+
+        //Converts the array argument to string form for display
+        for(comment in commentArray) {
+            var commentOrder = commentArray.length - comment;
+            commentString = commentString + "Comment " + commentOrder + ":\n";
+            commentString = commentString + commentArray[comment] + "\n\n";
+        }
+
+        document.getElementById("message-container").innerText = commentString;
+    });
+}
