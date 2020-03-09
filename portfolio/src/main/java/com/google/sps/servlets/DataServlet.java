@@ -27,16 +27,34 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
+class CommentSentiment {
+    ArrayList<String> comments;
+    ArrayList<Double> scores;
+
+    CommentSentiment(ArrayList<String> c, ArrayList<Double> s) {
+        this.comments = c;
+        this.scores = s;
+    }
+}
+
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
     //Loads comments every time page is loaded
+    
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        ArrayList<String> comments = new ArrayList<>();
+        //ArrayList<String> comments = new ArrayList<>();
+        //ArrayList<Integer> scores = new ArrayList<>();
+
+        CommentSentiment commentSentiment = 
+            new CommentSentiment(new ArrayList<String>(), new ArrayList<Double>());
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
@@ -44,13 +62,19 @@ public class DataServlet extends HttpServlet {
 
         for (Entity entity : results.asIterable()) {
             String comment = (String) entity.getProperty("comment");
-            comments.add(comment);
+            Double score = (Double) entity.getProperty("sentiment");
+            //comments.add(comment);
+            //scores.add(score);
+            commentSentiment.comments.add(comment);
+            commentSentiment.scores.add(score);
         }
 
 
         Gson gson = new Gson();
-        String jsonComments = gson.toJson(comments);
+        String jsonComments = gson.toJson(commentSentiment);
+        //String jsonScores = gson.toJson(scores);
         response.getWriter().println(jsonComments);
+        //response.getWriter().println(scores);
     }
 
     //Adds a comment every time someone posts
@@ -58,10 +82,18 @@ public class DataServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String comment = request.getParameter("comment");
 
+        Document doc =
+            Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+        LanguageServiceClient languageService = LanguageServiceClient.create();
+        Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+        float score = sentiment.getScore();
+        languageService.close();
+
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Entity commentEntity = new Entity("Comment");
         commentEntity.setProperty("comment", comment);
         commentEntity.setProperty("timestamp", System.currentTimeMillis());
+        commentEntity.setProperty("sentiment", score);
         datastore.put(commentEntity);
 
         response.sendRedirect("/index.html");
