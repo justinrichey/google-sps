@@ -20,7 +20,7 @@ function getMessage() {
     fetch("/data").then(response => response.json()).then(responseObj => {
         var commentString = "\n"; //Initializing string containing comments
 
-        //Converts the array argument to string form for display
+        //Converts the JSON object argument to string form for display
         for(comment in responseObj.comments) {
             var commentOrder = responseObj.comments.length - comment;
             var score = responseObj.scores[comment];
@@ -28,6 +28,7 @@ function getMessage() {
 
             commentString = commentString + "Comment " + commentOrder;
 
+            //Attributing sentiment based on sentiment scores
             if (score > 0.4) {
                 sentimentStr = "(Positive Sentiment)";
             } else if (score < -0.4) {

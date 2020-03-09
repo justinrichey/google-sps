@@ -32,6 +32,7 @@ import com.google.cloud.language.v1.LanguageServiceClient;
 import com.google.cloud.language.v1.Sentiment;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
+//An object that will be converted to JSON. Contains comments and their sentiment scores
 class CommentSentiment {
     ArrayList<String> comments;
     ArrayList<Double> scores;
@@ -46,12 +47,9 @@ class CommentSentiment {
 public class DataServlet extends HttpServlet {
 
     //Loads comments every time page is loaded
-    
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        //ArrayList<String> comments = new ArrayList<>();
-        //ArrayList<Integer> scores = new ArrayList<>();
 
         CommentSentiment commentSentiment = 
             new CommentSentiment(new ArrayList<String>(), new ArrayList<Double>());
@@ -63,18 +61,12 @@ public class DataServlet extends HttpServlet {
         for (Entity entity : results.asIterable()) {
             String comment = (String) entity.getProperty("comment");
             Double score = (Double) entity.getProperty("sentiment");
-            //comments.add(comment);
-            //scores.add(score);
             commentSentiment.comments.add(comment);
             commentSentiment.scores.add(score);
         }
 
-
-        Gson gson = new Gson();
-        String jsonComments = gson.toJson(commentSentiment);
-        //String jsonScores = gson.toJson(scores);
+        String jsonComments = new Gson().toJson(commentSentiment);
         response.getWriter().println(jsonComments);
-        //response.getWriter().println(scores);
     }
 
     //Adds a comment every time someone posts
@@ -82,6 +74,7 @@ public class DataServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String comment = request.getParameter("comment");
 
+        //Gets the sentiment score based on the comment
         Document doc =
             Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
         LanguageServiceClient languageService = LanguageServiceClient.create();
@@ -89,6 +82,7 @@ public class DataServlet extends HttpServlet {
         float score = sentiment.getScore();
         languageService.close();
 
+        //Stores the comment, sentiment, and time of submission
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Entity commentEntity = new Entity("Comment");
         commentEntity.setProperty("comment", comment);
