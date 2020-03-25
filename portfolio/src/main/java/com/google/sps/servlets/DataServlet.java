@@ -31,18 +31,19 @@ import com.google.cloud.language.v1.Document;
 import com.google.cloud.language.v1.LanguageServiceClient;
 import com.google.cloud.language.v1.Sentiment;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-//An object that will be converted to JSON. Contains comments and their sentiment scores
+
+/**An object that will be converted to JSON. Contains comments and their sentiment scores */
 class CommentSentiment {
     ArrayList<String> comments;
     ArrayList<Double> scores;
 
-    CommentSentiment(ArrayList<String> c, ArrayList<Double> s) {
-        this.comments = c;
-        this.scores = s;
+    CommentSentiment() {
+        this.comments = new ArrayList<String>();
+        this.scores = new ArrayList<Double>();
     }
 }
 
+/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
@@ -51,8 +52,7 @@ public class DataServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
 
-        CommentSentiment commentSentiment = 
-            new CommentSentiment(new ArrayList<String>(), new ArrayList<Double>());
+        CommentSentiment commentSentiment = new CommentSentiment();
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
