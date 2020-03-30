@@ -27,6 +27,21 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
+
+
+/**An object that will be converted to JSON. Contains comments and their sentiment scores */
+class CommentSentiment {
+    ArrayList<String> comments;
+    ArrayList<Double> scores;
+
+    CommentSentiment() {
+        this.comments = new ArrayList<String>();
+        this.scores = new ArrayList<Double>();
+    }
+}
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -36,7 +51,8 @@ public class DataServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        ArrayList<String> comments = new ArrayList<>();
+
+        CommentSentiment commentSentiment = new CommentSentiment();
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
@@ -44,12 +60,12 @@ public class DataServlet extends HttpServlet {
 
         for (Entity entity : results.asIterable()) {
             String comment = (String) entity.getProperty("comment");
-            comments.add(comment);
+            Double score = (Double) entity.getProperty("sentiment");
+            commentSentiment.comments.add(comment);
+            commentSentiment.scores.add(score);
         }
 
-
-        Gson gson = new Gson();
-        String jsonComments = gson.toJson(comments);
+        String jsonComments = new Gson().toJson(commentSentiment);
         response.getWriter().println(jsonComments);
     }
 
@@ -58,10 +74,20 @@ public class DataServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String comment = request.getParameter("comment");
 
+        //Gets the sentiment score based on the comment
+        Document doc =
+            Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+        LanguageServiceClient languageService = LanguageServiceClient.create();
+        Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+        float score = sentiment.getScore();
+        languageService.close();
+
+        //Stores the comment, sentiment, and time of submission
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Entity commentEntity = new Entity("Comment");
         commentEntity.setProperty("comment", comment);
         commentEntity.setProperty("timestamp", System.currentTimeMillis());
+        commentEntity.setProperty("sentiment", score);
         datastore.put(commentEntity);
 
         response.sendRedirect("/index.html");

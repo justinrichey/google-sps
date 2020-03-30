@@ -17,14 +17,28 @@ function displayText(pageType) {
 }
 
 function getMessage() {
-    fetch("/data").then(response => response.json()).then(commentArray => {
+    fetch("/data").then(response => response.json()).then(responseObj => {
         var commentString = "\n"; //Initializing string containing comments
 
-        //Converts the array argument to string form for display
-        for(comment in commentArray) {
-            var commentOrder = commentArray.length - comment;
-            commentString = commentString + "Comment " + commentOrder + ":\n";
-            commentString = commentString + commentArray[comment] + "\n\n";
+        //Converts the JSON object argument to string form for display
+        for(comment in responseObj.comments) {
+            var commentOrder = responseObj.comments.length - comment;
+            var score = responseObj.scores[comment];
+            var sentimentStr;
+
+            commentString = commentString + "Comment " + commentOrder;
+
+            //Attributing sentiment based on sentiment scores
+            if (score > 0.4) {
+                sentimentStr = "(Positive Sentiment)";
+            } else if (score < -0.4) {
+                sentimentStr = "(Negative Sentiment)";
+            } else {
+                sentimentStr = "(Neutral Sentiment)";
+            }
+
+            commentString = commentString + " " + sentimentStr + ":\n";
+            commentString = commentString + responseObj.comments[comment] + "\n\n";
         }
 
         document.getElementById("message-container").innerText = commentString;
